@@ -20,6 +20,12 @@ app.use(index);
 
 io.on("connection", (socket) => {
   console.log("New client connected");
+  socket.broadcast.emit("friend connection", "Hello from server");
+  socket.on("location update", (location) => {
+    console.log("location update");
+    console.log(socket);
+    console.log(location);
+  });
   socket.on("disconnect", () => {
     console.log("Client disconnected");
   });
