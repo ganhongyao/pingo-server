@@ -33,8 +33,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("query friend locations", () => {
-    socket.emit("friend locations", Object.fromEntries(locations));
+    const friendLocations = Array.from(locations.keys()).map((socketId) => ({
+      socketId: socketId,
+      location: locations.get(socketId),
+    }));
+    socket.emit("friend locations", friendLocations);
     console.log("Query friend locations");
+    console.log(friendLocations);
   });
 
   socket.on("disconnect", () => {
