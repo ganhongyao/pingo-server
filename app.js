@@ -18,25 +18,33 @@ const io = socketIo(server, {
 
 app.use(index);
 
-const locations = new Map();
+const users = new Map();
 
 io.on("connection", (socket) => {
   console.log("New client connected");
-  locations.set(socket.id, {});
+  users.set(socket.id, {});
 
-  socket.broadcast.emit("friend connection", "Hello from server");
+  socket.on("set name", (name) => {
+    console.log("Set name");
+    users.set(socket.id, { ...users.get(socket.id), name: name });
+    socket.broadcast.emit("friend connection", name);
+  });
 
   socket.on("location update", (location) => {
     console.log("Location update");
-    locations.set(socket.id, location);
+    console.log(location);
+    users.set(socket.id, { ...users.get(socket.id), location: location });
     socket.broadcast.emit("friend location update", location);
   });
 
   socket.on("query friend locations", () => {
-    const friendLocations = Array.from(locations.keys()).map((socketId) => ({
-      socketId: socketId,
-      location: locations.get(socketId),
-    }));
+    const friendLocations = Array.from(users.keys())
+      .filter((socketId) => users.get(socketId).name)
+      .map((socketId) => ({
+        socketId: socketId,
+        name: users.get(socketId).name,
+        location: users.get(socketId).location,
+      }));
     socket.emit("friend locations", friendLocations);
     console.log("Query friend locations");
     console.log(friendLocations);
@@ -45,7 +53,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("Client disconnected");
     socket.broadcast.emit("friend disconnection", "Goodbye from server");
-    locations.delete(socket.id);
+    users.delete(socket.id);
   });
 });
 
