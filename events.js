@@ -1,3 +1,7 @@
+// Native events
+const EVENT_CONNECTION = "connection";
+const EVENT_DISCONNECT = "disconnect";
+
 // Server to client events
 const EVENT_FRIEND_CONNECTION = "friendConnection";
 const EVENT_FRIEND_DISCONNECTION = "friendDisconnection";
@@ -10,6 +14,8 @@ const EVENT_UPDATE_LOCATION = "updateLocation";
 const EVENT_QUERY_FRIEND_LOCATIONS = "queryFriendLocations";
 
 module.exports = {
+  EVENT_CONNECTION,
+  EVENT_DISCONNECT,
   EVENT_FRIEND_CONNECTION,
   EVENT_FRIEND_DISCONNECTION,
   EVENT_FRIEND_LOCATIONS,
