@@ -44,6 +44,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("Client disconnected");
+    socket.broadcast.emit("friend disconnection", "Goodbye from server");
     locations.delete(socket.id);
   });
 });
