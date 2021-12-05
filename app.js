@@ -57,6 +57,11 @@ io.on(events.EVENT_CONNECTION, (socket) => {
     socket.emit(events.EVENT_FRIEND_LOCATIONS, friendLocations);
   });
 
+  socket.on(events.EVENT_PING_FRIEND, (userToPing) => {
+    logger.logEvent(socket.id, events.EVENT_PING_FRIEND, userToPing);
+    io.to(userToPing.socketId).emit(events.EVENT_PING, getUser(socket.id));
+  });
+
   socket.on(events.EVENT_DISCONNECT, () => {
     logger.logEvent(socket.id, events.EVENT_DISCONNECT);
     socket.broadcast.emit(
