@@ -66,6 +66,12 @@ io.on(events.EVENT_CONNECTION, (socket) => {
     });
   });
 
+  socket.on(events.EVENT_SEND_MESSAGE, (message) => {
+    logger.logEventWithParams(socket.id, events.EVENT_SEND_MESSAGE, message);
+    const receiver = message.receiver;
+    io.to(receiver.socketId).emit(events.EVENT_MESSAGE, message);
+  });
+
   socket.on(events.EVENT_DISCONNECT, () => {
     logger.logEvent(socket.id, events.EVENT_DISCONNECT);
     socket.broadcast.emit(
