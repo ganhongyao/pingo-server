@@ -57,13 +57,16 @@ io.on(events.EVENT_CONNECTION, (socket) => {
     socket.emit(events.EVENT_FRIEND_LOCATIONS, friendLocations);
   });
 
-  socket.on(events.EVENT_PING_FRIEND, (pingAction) => {
-    logger.logEventWithParams(socket.id, events.EVENT_PING_FRIEND, pingAction);
-    const userToPing = pingAction.receiver;
-    io.to(userToPing.socketId).emit(events.EVENT_PING, {
-      sender: getUser(socket.id),
-      message: pingAction.message,
-    });
+  socket.on(events.EVENT_PING_FRIEND, (ping) => {
+    logger.logEventWithParams(socket.id, events.EVENT_PING_FRIEND, ping);
+    const { receiver } = ping;
+    io.to(receiver.socketId).emit(events.EVENT_PING, ping);
+  });
+
+  socket.on(events.EVENT_ACCEPT_PING, (ping) => {
+    logger.logEventWithParams(socket.id, events.EVENT_ACCEPT_PING, ping);
+    const { sender } = ping;
+    io.to(sender.socketId).emit(events.EVENT_PING_ACCEPTED, ping);
   });
 
   socket.on(events.EVENT_SEND_MESSAGE, (message) => {
